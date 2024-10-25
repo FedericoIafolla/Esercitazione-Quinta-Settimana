@@ -1,0 +1,111 @@
+package com.example.GestionePrenotazioni;
+
+import com.example.GestionePrenotazioni.model.Edificio;
+import com.example.GestionePrenotazioni.model.Postazione;
+import com.example.GestionePrenotazioni.model.Utente;
+import com.example.GestionePrenotazioni.repository.EdificioRepository;
+import com.example.GestionePrenotazioni.repository.PostazioneRepository;
+import com.example.GestionePrenotazioni.repository.UtenteRepository;
+import com.example.GestionePrenotazioni.service.PrenotazioneService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.time.LocalDate;
+import java.util.Scanner;
+
+@SpringBootApplication
+public class GestionePrenotazioniApplication implements CommandLineRunner {
+
+	@Autowired
+	private UtenteRepository utenteRepository;
+
+	@Autowired
+	private PostazioneRepository postazioneRepository;
+
+	@Autowired
+	private EdificioRepository edificioRepository;
+
+	@Autowired
+	private PrenotazioneService prenotazioneService;
+
+	private Scanner scanner = new Scanner(System.in);
+
+	public static void main(String[] args) {
+		SpringApplication.run(GestionePrenotazioniApplication.class, args);
+	}
+
+	@Override
+	public void run(String... args) {
+		System.out.println("Benvenuto nel sistema di gestione delle prenotazioni!");
+
+		System.out.print("Sei un utente registrato? (s/n): ");
+		String risposta = scanner.nextLine();
+
+		Utente utente;
+		if (risposta.equalsIgnoreCase("n")) {
+			utente = registrazioneUtente();
+		} else {
+			System.out.print("Inserisci il tuo email: ");
+			String email = scanner.nextLine();
+			utente = utenteRepository.findByEmail(email).orElse(null);
+			if (utente == null) {
+				System.out.println("Utente non trovato.");
+				return;
+			}
+		}
+
+		prenotazione(utente);
+	}
+
+	private Utente registrazioneUtente() {
+		System.out.print("Inserisci il tuo nome: ");
+		String nome = scanner.nextLine();
+		System.out.print("Inserisci lo username: ");
+		String username = scanner.nextLine();
+		System.out.print("Inserisci la tua email: ");
+		String email = scanner.nextLine();
+
+		Utente utente = new Utente(nome, username, email);
+		utente = utenteRepository.save(utente);
+		System.out.println("Creazione utente riuscita! Il tuo ID è: " + utente.getId());
+		return utente;
+	}
+
+	private void prenotazione(Utente utente) {
+		while (true) {
+			System.out.print("Vuoi fare una prenotazione? (s/n): ");
+			String risposta = scanner.nextLine();
+			if (risposta.equalsIgnoreCase("n")) break;
+
+			System.out.print("Scegli il tipo di postazione (privato, openspace, sala_riunioni): ");
+			String tipoPostazione = scanner.nextLine().toUpperCase();
+			Postazione.Tipo tipo = Postazione.Tipo.valueOf(tipoPostazione);
+
+			System.out.println("Edifici disponibili per " + tipo + ":");
+			edificioRepository.findByTipoPostazione(tipo).forEach(edificio ->
+					System.out.println(edificio.getNome()));
+
+			System.out.print("Inserisci la data per la prenotazione (YYYY-MM-DD): ");
+			String dataInput = scanner.nextLine();
+			LocalDate dataPrenotazione = LocalDate.parse(dataInput);
+
+			boolean isAvailable = prenotazioneService.canBook(tipo, dataPrenotazione);
+			if (isAvailable) {
+				// Logica per creare la prenotazione
+				System.out.println("Prenotazione effettuata con successo!");
+				// Aggiungi codice per salvare la prenotazione
+			} else {
+				System.out.print("Data non disponibile, vuoi inserire un'altra data o cambiare postazione? (d/p): ");
+				String scelta = scanner.nextLine();
+				if (scelta.equalsIgnoreCase("d")) {
+					continue; // Ritorna al ciclo per reinserire la data
+				} else {
+					// Ritorna al ciclo per scegliere un'altra postazione
+					break;
+				}
+			}
+		}
+	}
+}

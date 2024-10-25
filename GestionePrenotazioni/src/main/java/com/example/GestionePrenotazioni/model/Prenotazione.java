@@ -2,7 +2,6 @@ package com.example.GestionePrenotazioni.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDate;
 
 @Entity
@@ -14,13 +13,14 @@ public class Prenotazione {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "postazione_id")
+    @JoinColumn(name = "postazione_id", nullable = false)
     private Postazione postazione;
 
     @ManyToOne
-    @JoinColumn(name = "utente_id")
+    @JoinColumn(name = "utente_id", nullable = false)
     private Utente utente;
 
+    @Column(nullable = false)
     private LocalDate data;
 
     public Prenotazione() {

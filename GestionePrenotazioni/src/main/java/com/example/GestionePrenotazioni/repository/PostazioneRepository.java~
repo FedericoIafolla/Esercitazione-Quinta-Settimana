@@ -1,9 +1,14 @@
 package com.example.GestionePrenotazioni.repository;
 
 import com.example.GestionePrenotazioni.model.Postazione;
+import com.example.GestionePrenotazioni.model.Edificio;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
+@Repository
 public interface PostazioneRepository extends JpaRepository<Postazione, Long> {
-    List<Postazione> findByTipoAndEdificio_Città(String tipo, String città);
+    List<Postazione> findByTipoAndEdificio(String tipo, Edificio edificio);
+    List<Postazione> findByEdificio(Edificio edificio);
 }

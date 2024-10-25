@@ -24,6 +24,14 @@ public class PrenotazioneService {
     }
 
     public boolean canBook(Long postazioneId, Long utenteId, LocalDate data) {
+        List<Prenotazione> prenotazioniPerPostazione = prenotazioneRepository.findByPostazioneAndData(postazioneId, data);
+        if (!prenotazioniPerPostazione.isEmpty()) {
+            return false;
+        }
+        List<Prenotazione> prenotazioniPerUtente = prenotazioneRepository.findByUtenteAndData(utenteId, data);
+        if (!prenotazioniPerUtente.isEmpty()) {
+            return false;
+        }
         return true;
     }
 }
