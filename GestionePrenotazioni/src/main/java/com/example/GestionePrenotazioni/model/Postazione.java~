@@ -2,12 +2,10 @@ package com.example.GestionePrenotazioni.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import javax.persistence.*;
 
 @Entity
 @Table(name = "postazioni")
 @Data
-
 public class Postazione {
     public enum Tipo {
         PRIVATO, OPENSPACE, SALA_RIUNIONI
@@ -19,7 +17,7 @@ public class Postazione {
     private String codice;
     private String descrizione;
 
-    @Enumerate(enumType.STRING)
+    @Enumerated(EnumType.STRING)
     private Tipo tipo;
     private int maxOccupanti;
 

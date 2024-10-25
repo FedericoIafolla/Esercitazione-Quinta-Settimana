@@ -22,4 +22,13 @@ public class Prenotazione {
     private Utente utente;
 
     private LocalDate data;
+
+    public Prenotazione() {
+    }
+
+    public Prenotazione(LocalDate data, Utente utente, Postazione postazione) {
+        this.data = data;
+        this.utente = utente;
+        this.postazione = postazione;
+    }
 }

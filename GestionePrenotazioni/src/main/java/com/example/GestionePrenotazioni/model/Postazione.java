@@ -14,6 +14,7 @@ public class Postazione {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String codice;
     private String descrizione;
 
@@ -24,4 +25,15 @@ public class Postazione {
     @ManyToOne
     @JoinColumn(name = "edificio_id")
     private Edificio edificio;
+
+    public Postazione() {
+    }
+
+    public Postazione(String codice, String descrizione, Tipo tipo, int maxOccupanti, Edificio edificio) {
+        this.codice = codice;
+        this.descrizione = descrizione;
+        this.tipo = tipo;
+        this.maxOccupanti = maxOccupanti;
+        this.edificio = edificio;
+    }
 }

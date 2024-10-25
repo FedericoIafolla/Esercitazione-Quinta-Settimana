@@ -1,10 +1,6 @@
 package com.example.GestionePrenotazioni.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -18,4 +14,13 @@ public class Utente {
     private String username;
     private String nomeCompleto;
     private String email;
+
+    public Utente() {
+    }
+
+    public Utente(String username, String nomeCompleto, String email) {
+        this.username = username;
+        this.nomeCompleto = nomeCompleto;
+        this.email = email;
+    }
 }
